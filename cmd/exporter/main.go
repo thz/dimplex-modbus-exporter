@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/paraopsde/go-x/pkg/util"
 	"github.com/prometheus/client_golang/prometheus"
@@ -71,8 +72,14 @@ func run(ctx context.Context, listen string) error {
 	prometheus.MustRegister(collector)
 
 	http.Handle("/metrics", promhttp.Handler())
-	if err := http.ListenAndServe(listen, nil); err != nil {
-		return err
+
+	server := &http.Server{
+		Addr:              listen,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+
+	if err := server.ListenAndServe(); err != nil {
+		return fmt.Errorf("failed to listen and serve: %w", err)
 	}
 	return nil
 }
