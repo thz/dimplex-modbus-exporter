@@ -34,9 +34,9 @@ type ModbusClient struct {
 	serverAddress string
 }
 
-func New() (*ModbusClient, error) {
+func New(addr string) (*ModbusClient, error) {
 	m := &ModbusClient{
-		serverAddress: "tcp://192.168.222.10:502",
+		serverAddress: addr,
 	}
 
 	return m, nil

@@ -36,25 +36,27 @@ func main() {
 		Use: "dimplex-modbus-exporter",
 		Run: func(cmd *cobra.Command, args []string) {
 			listen, _ := cmd.Flags().GetString("listen")
+			addr, _ := cmd.Flags().GetString("address")
 
 			ctx := context.Background()
 			log := util.NewLogger()
 			ctx = util.CtxWithLog(ctx, log)
 
-			if err := run(ctx, listen); err != nil {
+			if err := run(ctx, addr, listen); err != nil {
 				log.Error("failed to execute command", zap.Error(err))
 				os.Exit(1)
 			}
 		},
 	}
 	rootCmd.Flags().StringP("listen", "l", ":9000", "listen address")
+	rootCmd.Flags().StringP("address", "a", "", "address of the modbus server")
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }
 
-func run(ctx context.Context, listen string) error {
-	m, err := modbus.New()
+func run(ctx context.Context, addr, listen string) error {
+	m, err := modbus.New(addr)
 	if err != nil {
 		return fmt.Errorf("failed to created modbus client: %w", err)
 	}
