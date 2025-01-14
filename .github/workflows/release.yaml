@@ -54,7 +54,7 @@ jobs:
         id: build_release
         run: |
           env GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} CGO_ENABLED=0 \
-            go build -o dimplex-modbus-exporter-${{ matrix.goos }}-${{ matrix.goarch }} ./cmd/dimplex-modbus-exporter
+            go build -o dimplex-modbus-exporter-${{ matrix.goos }}-${{ matrix.goarch }} ./cmd/exporter
 
       - name: Upload Release Asset
         id: upload-release-asset
