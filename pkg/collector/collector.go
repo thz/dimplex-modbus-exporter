@@ -153,7 +153,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		default:
 			val, err := c.modbus.RequestPseudoFloat16(c.ctx, mdef.register)
 			if err != nil {
-				log.Warn("failed to request data", zap.Error(err))
+				log.Warn("failed to request data", zap.String("metric-definition-name", mdef.name), zap.Error(err))
 				c.modbusErrorCount += 1
 				continue
 			}

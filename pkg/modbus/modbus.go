@@ -17,13 +17,10 @@ package modbus
 import (
 	"context"
 	"fmt"
-	"math"
 	"time"
 
 	"github.com/simonvetter/modbus"
 )
-
-var ErrRegisterValueOutOfRange = fmt.Errorf("register value is out of range")
 
 type DataSet struct {
 	TemperatureInflow float64
@@ -70,18 +67,10 @@ func (m *ModbusClient) RequestPseudoFloat16(ctx context.Context, reg uint16) (fl
 }
 
 func (m *ModbusClient) RequestInt16(ctx context.Context, reg uint16) (int16, error) {
-	var (
-		reg16 uint16
-		err   error
-	)
-	reg16, err = m.client.ReadRegister(reg, modbus.HOLDING_REGISTER)
+	reg16, err := m.client.ReadRegister(reg, modbus.HOLDING_REGISTER)
 	if err != nil {
 		return 0, fmt.Errorf("failed to read register: %w", err)
 	}
 
-	if reg16 > math.MaxInt16 {
-		return 0, fmt.Errorf("%w: %d", ErrRegisterValueOutOfRange, reg16)
-	}
-
-	return (int16(reg16)), nil
+	return int16(reg16), nil
 }
