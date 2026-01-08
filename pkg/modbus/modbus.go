@@ -72,5 +72,5 @@ func (m *ModbusClient) RequestInt16(ctx context.Context, reg uint16) (int16, err
 		return 0, fmt.Errorf("failed to read register: %w", err)
 	}
 
-	return int16(reg16), nil
+	return int16(reg16), nil //nolint:gosec // intentional bit reinterpretation for signed register values
 }
